@@ -35,7 +35,6 @@ public class LoginTest {
                 .clickLanguageCheckbox()
                 .checkEnglish()
                 .clickLoginButton();
-
     }
 
     @AfterEach

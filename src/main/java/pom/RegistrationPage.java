@@ -20,6 +20,7 @@ public class RegistrationPage {
     private By signUpButton = By.xpath(".//button[text()='Sign Up']");
     private By signInLink = By.xpath(".//a[contains(text(), 'Sign In')]");
     private By emailSentHeader = By.xpath(".//h2");
+    private By okEmailSentButton = By.xpath(".//button[text() = 'OK']");
 
     @Step("Кликнуть на ссылку Google")
     public RegistrationPage clickGoogleLink() {
@@ -67,6 +68,11 @@ public class RegistrationPage {
         driver.findElement(signUpButton).click();
         return  this;
     }
+    @Step("Кликнуть на кнопку OK в сообщении об отправке письма на почту")
+    public RegistrationPage clickOkEmailSentButton() {
+        driver.findElement(okEmailSentButton).click();
+        return  this;
+    }
     @Step("Кликнуть на ссылку Sign In")
     public RegistrationPage clickSignInLink() {
         driver.findElement(signInLink).click();
@@ -75,5 +81,17 @@ public class RegistrationPage {
 
     public String getEmailSentText() {
         return driver.findElement(emailSentHeader).getText();
+    }
+
+    public void registrationWithValidCredentials(String username, String email, String password) {
+        this
+                .inputUsernameField(username)
+                .inputEmailField(email)
+                .inputPasswordField(password)
+                .inputPasswordConfirmationField(password)
+                .clickPrivacyPolicyCheckbox()
+                .clickSignUpButton()
+                .clickOkEmailSentButton()
+                .clickSignInLink();
     }
 }

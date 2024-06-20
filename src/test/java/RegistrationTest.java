@@ -8,8 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import pom.LoginPage;
 import pom.MainPage;
+import pom.ProfilePage;
 import pom.RegistrationPage;
+import static sql.DatabaseOperations.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +51,7 @@ public class RegistrationTest {
     @QaseTitle("Registration (основной сценарий)")
     public void registrationBaseTest() {
         Faker faker = new Faker();
-        username = faker.name().firstName();
+        username = faker.internet().password(6, 20, true, false, false);
         email = faker.internet().emailAddress();
         password = faker.internet().password(6, 20, true, true, true);
         String expected = "Email sent";
@@ -60,6 +63,28 @@ public class RegistrationTest {
                 .inputPasswordConfirmationField(password)
                 .clickPrivacyPolicyCheckbox()
                 .clickSignUpButton();
+        updateIsConfirmed(getIdByEmail(email), true);
         assertEquals(expected, registrationPage.getEmailSentText(), "Не удалось зарегистрироваться");
     }
+    @Test
+    public void regAndLoginTest() throws InterruptedException {
+        Faker faker = new Faker();
+        username = faker.internet().password(6, 20, true, false, false);
+        email = faker.internet().emailAddress();
+        password = faker.internet().password(6, 20, true, true, true);
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        registrationPage.registrationWithValidCredentials(username, email, password);
+        updateIsConfirmed(getIdByEmail(email), true);
+
+        LoginPage loginPage = new LoginPage(driver);
+        ProfilePage profilePage = new ProfilePage(driver);
+        loginPage
+                .inputЕmailField(email)
+                .inputPasswordField(password)
+                .clickSigninButton();
+        Thread.sleep(500);
+        assertEquals(username, profilePage.getFillProfileHeader(), "Не удалось авторизоваться");
+
+    }
+
 }
