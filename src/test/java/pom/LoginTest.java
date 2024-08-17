@@ -1,13 +1,13 @@
+package pom;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.qase.api.annotation.CaseTitle;
-import io.qase.api.annotation.QaseId;
+import io.qameta.allure.Description;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import pom.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -44,8 +44,7 @@ public class LoginTest {
 
 
     @Test
-    @QaseId(201)
-    @CaseTitle("Log In (основной сценарий)")
+   @Description("Log In (основной сценарий)")
     public void loginTest() throws InterruptedException {
 
         String expected = "new_userA";

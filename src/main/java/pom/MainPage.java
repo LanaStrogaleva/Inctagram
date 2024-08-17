@@ -1,6 +1,5 @@
 package pom;
-
-import io.qase.api.annotation.Step;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -25,6 +24,10 @@ public class MainPage {
     private By statisticsTab = By.xpath(".//a[@href= '/statistics']");
     private By favoritesTab = By.xpath(".//a[@href= '/favorites']");
     private By logoutButton = By.xpath(".//button[text()= 'Log Out']");
+
+    public By getEnglish() {
+        return english;
+    }
 
     @Step("Перейти на сайт")
     public void open() {
@@ -55,6 +58,11 @@ public class MainPage {
     @Step("Выбрать язык Russian")
     public MainPage checkRussian() {
         webDriver.findElement(russian).click();
+        return this;
+    }
+    @Step("Кликнуть на вкладку профиль")
+    public MainPage clickMyprofileTab() {
+        webDriver.findElement(myprofileTab).click();
         return this;
     }
 

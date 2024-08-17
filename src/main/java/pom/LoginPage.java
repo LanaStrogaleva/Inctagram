@@ -1,11 +1,12 @@
 package pom;
 
-import io.qase.api.annotation.Step;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class LoginPage {
     private final WebDriver driver;
+    private static final String URL = "https://funny-inctagram.site/";
 
     public LoginPage (WebDriver driver) {
         this.driver = driver;
@@ -19,6 +20,11 @@ public class LoginPage {
     private By forgotPasswordLink = By.xpath(".//a[@href =  '/forgot-password']");
     private By signinButton = By.xpath(".//form/button");
     private By signupLink = By.xpath(".//a[contains(text(), 'Sign Up')]");
+
+    @Step("Перейти на страницу профиля")
+    public void openProfile() {
+        driver.get(URL + "profile");
+    }
 
     public String getSigninHeaderText() {
 

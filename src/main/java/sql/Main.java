@@ -10,9 +10,13 @@ public class Main {
 
         //updateIsConfirmed("54988d59-3c5c-47bd-ab53-696c6b263ab6", true);
 
-        String email = "jannie.kerluke@gmail.com";  // Замените на нужный email
-        String id = getIdByEmail(email);
+        String email = "eon@ttt.com";  // Замените на нужный email
+        Integer id = getIdByEmail(email);
         System.out.println(id);
+
+
+        String confCode = getConfirmationCodeByUserId(id);
+        System.out.println(confCode);
     }
 
 

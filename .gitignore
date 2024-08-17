@@ -1,0 +1,61 @@
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Maven target directory
+/target/
+
+# Logs
+*.log
+
+# Dependency directories
+**/node_modules/
+**/bower_components/
+
+# IDE config files
+*.swp
+*~
+
+# Java files
+*.class
+*.jar
+*.war
+*.ear
+
+# Compiled class files
+/bin/
+/out/
+
+# Package files
+*.jar
+*.war
+*.ear
+*.class
+
+# Maven target directory
+/target/
+
+# Temporary files
+/tmp/
+*.tmp
+*.temp
+
+# Allure results directory
+allure-results/
+
+# Selenium WebDriver binary files (if downloaded manually)
+**/chromedriver
+**/geckodriver
+**/msedgedriver
+**/operadriver
+
+# JUnit system files
+test-output/
+
+# Reports (if not versioned)
+allure-report/

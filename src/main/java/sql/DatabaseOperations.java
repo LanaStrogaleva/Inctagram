@@ -37,10 +37,10 @@ public class DatabaseOperations {
             System.out.println(ex.getMessage());
         }
     }
-    // Получение id по соответствующему email в таблице users
-    public static String getIdByEmail(String email) {
-        String sql = "SELECT id FROM public.users WHERE email = ?";
-        String id = null;
+    // Получение id по соответствующему email в таблице User
+    public static Integer getIdByEmail(String email) {
+        String sql = "SELECT id FROM public.\"User\" WHERE email = ?";
+        Integer id = null;
 
         try (Connection conn = DatabaseConnection.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -49,7 +49,7 @@ public class DatabaseOperations {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                id = rs.getString("id");
+                id = rs.getInt("id");
             }
 
         } catch (SQLException ex) {
@@ -57,19 +57,19 @@ public class DatabaseOperations {
         }
         return id;
     }
-    // Получение confirmation_code по соответствующему user_id в таблице users_registration_info
-    public static String getConfirmationCodeByUserId(String email) {
-        String sql = "SELECT id FROM public.users_registration_info WHERE user_id = ?";
+    // Получение confirmation_code по соответствующему "userId" в таблице public."EmailConfirmation"
+    public static String getConfirmationCodeByUserId(Integer userId) {
+        String sql = "SELECT \"confirmationCode\" FROM public.\"EmailConfirmation\" WHERE \"userId\" = ?";
         String confirmationCode = null;
 
         try (Connection conn = DatabaseConnection.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, email);
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                confirmationCode = rs.getString("confirmation_code");
+                confirmationCode = rs.getString("confirmationCode");
             }
 
         } catch (SQLException ex) {
