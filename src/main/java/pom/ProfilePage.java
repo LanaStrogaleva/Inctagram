@@ -11,7 +11,7 @@ public class ProfilePage {
     }
 
     private By profileHeader = By.xpath(".//main[text() = 'Profile Page']");
-    private By fillProfileHeader = By.xpath(".//p[text() = 'new_userA']");
+    private By fillProfileHeader = By.xpath(".//div[contains(@class, 'name')]/p");
 
 
     public String getprofileHeaderText() {

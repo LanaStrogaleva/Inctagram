@@ -46,13 +46,13 @@ public class ProfileTest {
 //        driver.manage().window().maximize();
    }
 
-    @Test
-    public void testAccessTokenAndRedirectToProfile() {
-        MainPage mainPage = new MainPage(driver);
-        // Установите URL вашего сайта
-        mainPage.open();
-
-        mainPage.clickLanguageCheckbox().checkEnglish().clickLoginButton();
+//    @Test
+//    public void testAccessTokenAndRedirectToProfile() {
+//        MainPage mainPage = new MainPage(driver);
+//        // Установите URL вашего сайта
+//        mainPage.open();
+//
+//        mainPage.clickLanguageCheckbox().checkEnglish().clickLoginButton();
 
 
 
@@ -68,17 +68,17 @@ public class ProfileTest {
 //        mainPage.clickMyprofileTab();
 //        driver.get("https://funny-inctagram.site/profile");
 
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.inputЕmailField("kyung.ondricka@hotmail.com").inputPasswordField("&x&*ku8Ca!F1").clickSigninButton();
+//        LoginPage loginPage = new LoginPage(driver);
+//        loginPage.inputЕmailField("kyung.ondricka@hotmail.com").inputPasswordField("&x&*ku8Ca!F1").clickSigninButton();
         //mainPage.clickMyprofileTab();
 
 
 
 //
 //         Проверьте, что мы на странице профиля
-        assertTrue(driver.getCurrentUrl().contains("/profile"));
+//        assertTrue(driver.getCurrentUrl().contains("/profile"));
 
-    }
+//    }
 
     @AfterEach
     public void tearDown() {

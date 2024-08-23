@@ -20,6 +20,9 @@ public class LoginPage {
     private By forgotPasswordLink = By.xpath(".//a[@href =  '/forgot-password']");
     private By signinButton = By.xpath(".//form/button");
     private By signupLink = By.xpath(".//a[contains(text(), 'Sign Up')]");
+    private  By passwordFieldErrorMessage = By.xpath(".//label[@for='Password']/parent::*/span");
+    private  By emailFieldErrorMessage = By.xpath(".//label[@for='Email']/parent::*/span");
+
 
     @Step("Перейти на страницу профиля")
     public void openProfile() {
@@ -52,6 +55,14 @@ public class LoginPage {
     @Step("Кликнуть по ссылке Fogot password")
     public void clickForgotPasswordLink() {
         driver.findElement(forgotPasswordLink).click();
+    }
+    @Step("Получить текст сообщения об ошибке под полем Email")
+    public String getEmailFieldErrorMessageText() {
+        return driver.findElement(emailFieldErrorMessage).getText();
+    }
+    @Step("Получить текст сообщения об ошибке под полем Password")
+    public String getPasswordFieldErrorMessageText() {
+        return driver.findElement(passwordFieldErrorMessage).getText();
     }
 }
 

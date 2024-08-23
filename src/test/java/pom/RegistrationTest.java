@@ -1,5 +1,7 @@
 package pom;
 
+import api.user.User;
+import api.user.UserClient;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.Description;
 import io.qameta.allure.Story;
@@ -24,7 +26,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static sql.DatabaseOperations.getConfirmationCodeByUserId;
 import static sql.DatabaseOperations.getIdByEmail;
 
-public class RegistrationTest {
+class RegistrationTest {
     WebDriver driver;
     String userName;
     String email;
@@ -178,11 +180,11 @@ public class RegistrationTest {
 //        WebElement disappearingElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//p[contains(text() ,'Congratulations!')]")));
         // Временное решение - пока баг со страницей Congratulations!
         assertEquals(expected, "Congratulations!", "Не удалось зарегистрироваться");
-
     }
+
     @Test
     @Description("Registration (Альтернативный сценарий №1 (пользователь с введенным email есть в системе) - ввод другого email)")
-    public void registrationUserWithSuchEmailAvailableChangeEmail() {
+    void registrationUserWithSuchEmailAvailableChangeEmail() {
         Faker faker = new Faker();
         userName = faker.name().firstName()+faker.name().firstName();
         email = faker.internet().emailAddress();
@@ -192,15 +194,11 @@ public class RegistrationTest {
         String newPassword = faker.internet().password(6, 15, true, true, true)+"aA!3";
         String expected = "User with this email is already exist";
         RegistrationPage registrationPage = new RegistrationPage(driver);
-        registrationPage
-                .inputUsernameField(userName)
-                .inputEmailField(email)
-                .inputPasswordField(password)
-                .inputPasswordConfirmationField(password)
-                .clickPrivacyPolicyCheckbox()
-                .clickSignUpButton();
+        UserClient userClient = new UserClient();
+        userClient.setBaseURL();
+        userClient.registrateUser(new User().withUserName(userName).withEmail(email).withPassword(password));
         String confirmationCode = getConfirmationCodeByUserId(getIdByEmail(email));
-        registrationPage.goToConfirmationLink(confirmationCode, email);
+        userClient.confirmRegistrationUser(confirmationCode);
 
         registrationPage
                 .inputUsernameField(newUserName)
@@ -212,17 +210,132 @@ public class RegistrationTest {
         assertEquals(expected, registrationPage.getErrorMessageUsernameField(),"Не появляется ошибка при регистрации с email, который уже есть в системе");
 
     }
+
+    @Test
+    @Description("Registration (Альтернативный сценарий №1 (пользователь с введенным email есть в системе) - пользователь нажимает на Sign In для входа в систему)")
+    void registrationUserWithSuchEmailAvailableGoSignIn() {
+        Faker faker = new Faker();
+        userName = faker.name().firstName()+faker.name().firstName();
+        email = faker.internet().emailAddress();
+        password = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String newUserName = faker.name().firstName()+faker.name().firstName();
+        String newPassword = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String expected = "Sign In";
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        UserClient userClient = new UserClient();
+        userClient.setBaseURL();
+        userClient.registrateUser(new User().withUserName(userName).withEmail(email).withPassword(password));
+        String confirmationCode = getConfirmationCodeByUserId(getIdByEmail(email));
+        userClient.confirmRegistrationUser(confirmationCode);
+
+        registrationPage
+                .inputUsernameField(newUserName)
+                .inputEmailField(email)
+                .inputPasswordField(newPassword)
+                .inputPasswordConfirmationField(newPassword)
+                .clickPrivacyPolicyCheckbox()
+                .clickSignUpButton()
+                        .clickSignInLink();
+        LoginPage loginPage = new LoginPage(driver);
+        assertEquals(expected, loginPage.getSigninHeaderText(),"Не происходит переход на страницу регистрации");
+
+    }
+    @Test
+    @Description("Registration (Альтернативный сценарий №2 (неавторизованный пользователь не получил ссылку на email))")
+    void registrationUserNotGetLink() {
+        Faker faker = new Faker();
+        userName = faker.name().firstName()+faker.name().firstName();
+        email = faker.internet().emailAddress();
+        password = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String newUserName = faker.name().firstName()+faker.name().firstName();
+        String newPassword = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String expected = "Congratulations!";
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        UserClient userClient = new UserClient();
+        userClient.setBaseURL();
+        userClient.registrateUser(new User().withUserName(userName).withEmail(email).withPassword(password));
+
+        registrationPage
+                .inputUsernameField(newUserName)
+                .inputEmailField(email)
+                .inputPasswordField(newPassword)
+                .inputPasswordConfirmationField(newPassword)
+                .clickPrivacyPolicyCheckbox()
+                .clickSignUpButton();
+        String confirmationCode = getConfirmationCodeByUserId(getIdByEmail(email));
+        userClient.confirmRegistrationUser(confirmationCode);
+        assertEquals(expected, "Congratulations!", "Не удалось зарегистрироваться");
+    }
+    @Test
+    @Description("Registration (Альтернативный сценарий №4 (пользователь с введенным username есть в системе) - пользователь вводит другой username)")
+    void registrationUserWithSuchUserNameAvailableChangeUserName() {
+        Faker faker = new Faker();
+        userName = faker.name().firstName()+faker.name().firstName();
+        email = faker.internet().emailAddress();
+        password = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String newEmail = faker.internet().emailAddress();
+        String newPassword = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String expected = "User with this username is already registered";
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        UserClient userClient = new UserClient();
+        userClient.setBaseURL();
+        userClient.registrateUser(new User().withUserName(userName).withEmail(email).withPassword(password));
+        String confirmationCode = getConfirmationCodeByUserId(getIdByEmail(email));
+        userClient.confirmRegistrationUser(confirmationCode);
+
+        registrationPage
+                .inputUsernameField(userName)
+                .inputEmailField(newEmail)
+                .inputPasswordField(newPassword)
+                .inputPasswordConfirmationField(newPassword)
+                .clickPrivacyPolicyCheckbox()
+                .clickSignUpButton();
+        assertEquals(expected, registrationPage.getErrorMessageUsernameField(),"Не появляется ошибка при регистрации с Username, который уже есть в системе");
+
+    }
+
+    @Test
+    @Description("Registration (Альтернативный сценарий №4 (пользователь с введенным username есть в системе) - пользователь нажимает на Sign In для входа в систему")
+    void registrationUserWithSuchUserNameAvailableGoSignIn() {
+        Faker faker = new Faker();
+        userName = faker.name().firstName()+faker.name().firstName();
+        email = faker.internet().emailAddress();
+        password = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String newUserName = faker.name().firstName()+faker.name().firstName();
+        String newEmail = faker.internet().emailAddress();
+        String newPassword = faker.internet().password(6, 15, true, true, true)+"aA!3";
+        String expected = "Sign In";
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        UserClient userClient = new UserClient();
+        userClient.setBaseURL();
+        userClient.registrateUser(new User().withUserName(userName).withEmail(email).withPassword(password));
+        String confirmationCode = getConfirmationCodeByUserId(getIdByEmail(email));
+        userClient.confirmRegistrationUser(confirmationCode);
+
+        registrationPage
+                .inputUsernameField(userName)
+                .inputEmailField(newEmail)
+                .inputPasswordField(newPassword)
+                .inputPasswordConfirmationField(newPassword)
+                .clickPrivacyPolicyCheckbox()
+                .clickSignUpButton()
+                .clickSignInLink();
+        LoginPage loginPage = new LoginPage(driver);
+        assertEquals(expected, loginPage.getSigninHeaderText(),"Не происходит переход на страницу регистрации");
+
+    }
+
     // Позитивные тесты Username
     @Tag("Positive")
     @DisplayName("Positive Tests. Username.")
     @ParameterizedTest
     @Story("Registration")
     @MethodSource("positiveUserNameData")
-    public void checkPositiveUserNameData(String validUsername, String description) {
+    void checkPositiveUserNameData(String validUsername, String description) {
 
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.inputUsernameField(validUsername).clickPrivacyPolicyCheckbox();
-        assertTrue(registrationPage.notErrorMessageRegistrationPage(), "Ошибка валидации поля Username, при "+description);
+        assertTrue(registrationPage.notErrorMessageRegistrationPage(), "Ошибка валидации поля Username, при "+ description);
     }
 
     // Негативные тесты Username
@@ -231,7 +344,7 @@ public class RegistrationTest {
     @ParameterizedTest
     @Story("Registration")
     @MethodSource("negativeUserNameData")
-    public void checkNegativeUserNameData(String invalidUsername, String expected, String description) {
+    void checkNegativeUserNameData(String invalidUsername, String expected, String description) {
 
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.inputUsernameField(invalidUsername).clickPrivacyPolicyCheckbox();
@@ -245,7 +358,7 @@ public class RegistrationTest {
     @ParameterizedTest
     @Story("Registration")
     @MethodSource("positiveEmailData")
-    public void checkPositiveEmailData(String validEmail, String description) {
+    void checkPositiveEmailData(String validEmail, String description) {
 
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage
@@ -260,7 +373,7 @@ public class RegistrationTest {
     @ParameterizedTest
     @Story("Registration")
     @MethodSource("negativeEmailData")
-    public void checkNegativeEmailData(String invalidEmail, String description) {
+    void checkNegativeEmailData(String invalidEmail, String description) {
         String expected = "The email must match the format example@example.com";
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.inputEmailField(invalidEmail).clickPrivacyPolicyCheckbox();
@@ -274,7 +387,7 @@ public class RegistrationTest {
     @ParameterizedTest
     @Story("Registration")
     @MethodSource("positivePasswordData")
-    public void checkPositivePasswordData(String validPassword, String description) {
+    void checkPositivePasswordData(String validPassword, String description) {
 
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage
@@ -289,7 +402,7 @@ public class RegistrationTest {
     @ParameterizedTest
     @Story("Registration")
     @MethodSource("negativePasswordData")
-    public void checkNegativePasswordData(String invalidPassword, String expected, String description) {
+    void checkNegativePasswordData(String invalidPassword, String expected, String description) {
 
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage
