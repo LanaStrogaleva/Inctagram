@@ -10,8 +10,9 @@ Desktop.ini
 # Maven target directory
 /target/
 
-# Screenshots directory
-/screenshots/
+# Screenshots directory and files
+screenshots/
+*.png
 
 # Logs
 *.log

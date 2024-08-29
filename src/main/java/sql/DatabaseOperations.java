@@ -77,4 +77,24 @@ public class DatabaseOperations {
         }
         return confirmationCode;
     }
+    // Получение recoveryCode по соответствующему email из таблицы public."PasswordRecovery"
+    public static String getRecoveryCodeByUserId(String email) {
+        String sql = "SELECT \"recoveryCode\" FROM public.\"PasswordRecovery\" WHERE \"email\" = ?";
+        String recoveryCode = null;
+
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                recoveryCode = rs.getString("recoveryCode");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return recoveryCode;
+    }
 }
