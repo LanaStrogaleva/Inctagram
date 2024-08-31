@@ -68,7 +68,7 @@ public class ProfileTest {
                 arguments("Aleksandra666",validFirstNameError,"Цифры"),
                 arguments("Aleks:andra",validAboutMeError,"Двоеточие"),
                 arguments("Aleksandra!",validFirstNameError,"Спецсимволы"),
-                arguments("",minLengthNameError,"поле пустое"),
+                arguments(" ",minLengthNameError,"поле пустое"),
                 arguments("AleksandraAleksandraAleksandraAleksandraAleksandraA",maxLengthNameError,"длина 51 символ")
         );
     }
@@ -87,7 +87,7 @@ public class ProfileTest {
                 arguments("Aleksandra666",validLastNameError,"Цифры"),
                 arguments("Aleks:andra",validLastNameError,"Двоеточие"),
                 arguments("Aleksandra!",validLastNameError,"Спецсимволы"),
-                arguments("",minLengthNameError,"поле пустое"),
+                arguments(" ",minLengthNameError,"поле пустое"),
                 arguments("AleksandraAleksandraAleksandraAleksandraAleksandraA",maxLengthNameError,"длина 51 символ")
         );
     }
@@ -214,7 +214,7 @@ public class ProfileTest {
     public void checkNegativeFirstNameDates(String invalidFirstName, String errorMessage, String description) {
         ProfilePage profilePage = new ProfilePage(driver);
         profilePage.clickProfileSettingsButton()
-                .inputLastNameField(invalidFirstName);
+                .inputFirstNameField(invalidFirstName);
         assertEquals(profilePage.getErrorMessageFirstName(),errorMessage, "Не появляется ошибка валидации при " + description);
     }
 

@@ -11,8 +11,8 @@ import static io.restassured.RestAssured.given;
 
 public class ProfileClient {
     String pathName;
-    public static String BASE_URL = "https://funny-inctagram.site";
-    private static String GET_USER_PROFILE_URL = "/api/v1/user/profile";
+    public static String BASE_URL = "https://inctagram.work";
+    private static String GET_USER_PROFILE_URL = "/api/v1/users/profile";
     private static String UPDATE_USER_PROFILE_URL = "/api/v1/user";
     private static String UPLOAD_USER_AVATAR_URL = "/api/v1/user/avatar";
     private static String DELETE_USER_AVATAR_URL = "/api/v1/user/avatar";
@@ -61,6 +61,10 @@ public class ProfileClient {
                 .when()
                 .delete(DELETE_USER_AVATAR_URL)
                 .body().asString();
+    }
+    @Step("Проверить статус код")
+    public void checkStatusCode(Response response, int httpStatus) {
+        response.then().statusCode(httpStatus);
     }
 
 }

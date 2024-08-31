@@ -277,7 +277,8 @@ public class ProfilePage {
     public String getErrorMessageFirstName() {
         String errorText = null;
         try {
-            errorText = driver.findElement(errorMessageFirstName).getText();
+          errorText = driver.findElement(errorMessageFirstName).getText();
+            System.out.println(errorText);
         } catch (NoSuchElementException e) {
             e.getMessage();
             System.out.println("Не удалось найти сообщение об ошибке");
